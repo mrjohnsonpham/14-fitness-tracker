@@ -1,6 +1,7 @@
 // require all npm packages 
 const express = require("express");
 const logger = require("morgan");
+// normally used for debugging 
 const mongoose = require("mongoose");
 
 const path = require("path");
@@ -10,16 +11,16 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-mongoose.connect(process.env.MONGODB_ATLAS_URI || "mongodb://localhost/workoutdb", { useNewUrlParser: true });
+app.use(express.static("./public"))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
-const db = require("./models");
+mongoose.connect(process.env.MONGODB_ATLAS_URI || "mongodb://localhost/workoutdb", { useNewUrlParser: true, useUnifiedTopology: true}, );
 
-// "http://localhost:3000/"
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/index.html"));
-});
+// from mongodbatlas-cluster
+// mongodb+srv://mrjohnsonpham:Iloverocky21@cluster0.mtzrb.mongodb.net/workoutdb?retryWrites=true&w=majority
 
-// db.User.create({name: "Bob-virus"});
+
 
 // routes
 app.use(require("./routes/api.js"));
